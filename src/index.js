@@ -2,6 +2,11 @@ import ReactDOM from "react-dom";
 import React from "react";
 import "./main.css";
 
+const onTheIslandSrc = new URL(
+  "./On the Island - Godmode.mp3",
+  import.meta.url
+);
+
 function getLocation(matrix, location) {
   return matrix[location.row][location.col];
 }
@@ -204,6 +209,14 @@ generateLevel();
 
 const maxHealth = 3;
 const App = () => {
+  const audioRef = React.useRef();
+  React.useEffect(() => {
+    const onClick = () => {
+      audioRef.current?.play();
+    };
+    document.addEventListener("click", onClick);
+    return document.removeEventListener("click", onClick);
+  }, []);
   const [tiles, setTiles] = React.useState(
     constructMatrix(
       (location) => {
@@ -568,6 +581,7 @@ const App = () => {
             </p>
             <p>Points - {points}</p>
           </div>
+          <audio ref={audioRef} src={onTheIslandSrc} autoPlay></audio>
         </div>
       </div>
     </div>
