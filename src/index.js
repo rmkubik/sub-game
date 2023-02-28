@@ -581,7 +581,7 @@ const App = () => {
             </p>
             <p>Points - {points}</p>
           </div>
-          <audio ref={audioRef} src={onTheIslandSrc} autoPlay></audio>
+          <audio ref={audioRef} src={onTheIslandSrc} autoPlay loop></audio>
         </div>
       </div>
     </div>
