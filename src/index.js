@@ -121,6 +121,36 @@ function update(array, index, value) {
   return [...array.slice(0, index), value, ...array.slice(index + 1)];
 }
 
+function constructArray(length, constructorFn = (x) => x) {
+  const array = [];
+
+  for (let i = 0; i < length; i += 1) {
+    array[i] = constructorFn(i);
+  }
+
+  return array;
+}
+
+class Bag {
+  items = [];
+
+  constructor(...items) {
+    this.items = items;
+  }
+
+  pick() {
+    const randIndex = randIntBetween(0, this.items.length - 1);
+    const picked = this.items[randIndex];
+    this.items = removeIndex(this.items, randIndex);
+
+    return picked;
+  }
+
+  add(item) {
+    this.items.push(item);
+  }
+}
+
 const Grid = ({ tiles, className, children }) => {
   const { width, height } = getDimensions(tiles);
   const defaultRenderTile = (tile) => (
@@ -191,14 +221,25 @@ let pickUps;
 let depths;
 
 function generateLevel() {
-  pickUps = [];
+  pickUps = [-1];
   depths = [3];
+
+  // Use array to weight pick up count likelihoods
+  const pickUpCount = pickRandomlyFromArray([
+    1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 6,
+  ]);
+  // Create a bag of 1 -> width - 1 (1-29 at time of writing)
+  const indicesBag = new Bag(...constructArray(width - 1, (x) => x + 1));
+  const pickUpIndices = constructArray(pickUpCount).map(() =>
+    indicesBag.pick()
+  );
 
   for (let i = 1; i < width; i += 1) {
     depths.push(clamp(depths[i - 1] + randIntBetween(-1, 1), 1, 7));
 
-    if (randIntBetween(1, 100) <= 20) {
-      pickUps.push(randIntBetween(depths[i] + 1, height - 1));
+    if (pickUpIndices.some((pickUpIndex) => pickUpIndex === i)) {
+      console.log("placing pick up");
+      pickUps.push(randIntBetween(height - depths[i] - 1, 0));
     } else {
       pickUps.push(-1);
     }
