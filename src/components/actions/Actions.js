@@ -26,6 +26,60 @@ const Actions = ({
   oxygen,
   setOxygen,
 }) => {
+  const canDrop1 = () => {
+    if (usedActions[0]) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const canDrop2 = (item) => {
+    if (usedActions[1]) {
+      return false;
+    }
+
+    const { dieIndex } = item;
+
+    const selectedDie = die[dieIndex];
+
+    if (selectedDie > 3) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const canDrop3 = (item) => {
+    if (usedActions[2]) {
+      return false;
+    }
+
+    const { dieIndex } = item;
+    const selectedDie = die[dieIndex];
+
+    if (selectedDie !== 3) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const canDrop4 = (item) => {
+    if (usedActions[3]) {
+      return false;
+    }
+
+    const { dieIndex } = item;
+    const selectedDie = die[dieIndex];
+
+    if (selectedDie !== 6) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <div style={{ marginRight: "2rem" }}>
       <h3>Crew Actions</h3>
@@ -38,8 +92,9 @@ const Actions = ({
       >
         <Slot
           deps={[usedActions, die, location, tiles, damage, points, oxygen]}
+          canDrop={canDrop1}
           onDrop={(item) => {
-            if (usedActions[0]) {
+            if (!canDrop1()) {
               return;
             }
 
@@ -141,18 +196,14 @@ const Actions = ({
       >
         <Slot
           deps={[usedActions, die, location, tiles, damage, points, oxygen]}
+          canDrop={canDrop2}
           onDrop={(item) => {
-            if (usedActions[1]) {
+            if (!canDrop2(item)) {
               return;
             }
 
             const { dieIndex } = item;
-
             const selectedDie = die[dieIndex];
-
-            if (selectedDie > 3) {
-              return;
-            }
 
             const aboveLocation = {
               row: location.row - 1,
@@ -187,18 +238,13 @@ const Actions = ({
       >
         <Slot
           deps={[usedActions, die, location, tiles, damage, points, oxygen]}
+          canDrop={canDrop3}
           onDrop={(item) => {
-            if (usedActions[2]) {
+            if (!canDrop3(item)) {
               return;
             }
 
             const { dieIndex } = item;
-
-            const selectedDie = die[dieIndex];
-
-            if (selectedDie !== 3) {
-              return;
-            }
 
             const newRow =
               generationState.height - generationState.depths[location.col] - 1;
@@ -251,18 +297,13 @@ const Actions = ({
       >
         <Slot
           deps={[usedActions, die, location, tiles, damage, points, oxygen]}
+          canDrop={canDrop4}
           onDrop={(item) => {
-            if (usedActions[3]) {
+            if (!canDrop4(item)) {
               return;
             }
 
             const { dieIndex } = item;
-
-            const selectedDie = die[dieIndex];
-
-            if (selectedDie !== 6) {
-              return;
-            }
 
             setDie(removeIndex(die, dieIndex));
 
