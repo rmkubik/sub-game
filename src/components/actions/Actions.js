@@ -91,7 +91,13 @@ const Actions = ({
             if (newLocation.col >= generationState.width) {
               // Generate new screen
               generateLevel();
-              newLocation = generationState.startLocation;
+
+              newLocation.row = Math.min(
+                generationState.startLocation.row,
+                location.row
+              );
+              newLocation.col = generationState.startLocation.col;
+
               newTiles = constructMatrix(
                 (location) => {
                   if (
