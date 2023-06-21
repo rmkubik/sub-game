@@ -1,7 +1,7 @@
 {
   "name": "parcel-react-starter",
   "browserslist": "> 0.5%, last 2 versions, not dead",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "",
   "dependencies": {
     "parcel": "^2.0.0",
